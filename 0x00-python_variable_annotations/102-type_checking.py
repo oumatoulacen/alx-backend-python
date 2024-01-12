@@ -4,6 +4,7 @@ from typing import List, Union, Tuple
 
 
 def zoom_array(lst: Tuple, factor: int = 2) -> List:
+    ''' Return a list of elements'''
     zoomed_in: List = [
         item for item in lst
         for i in range(factor)
