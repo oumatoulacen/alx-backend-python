@@ -4,7 +4,11 @@ from typing import Union, Mapping, Any, TypeVar
 
 
 T = TypeVar('T')
-def safely_get_value(dct: Mapping, key: Any, default: Union[T, None] = None) -> Union[Any, T]:
+ret = Union[Any, T]
+df = Union[T, None]
+
+
+def safely_get_value(dct: Mapping, key: Any, default: df = None) -> ret:
     ''' Get the value of the given key'''
     if key in dct:
         return dct[key]
