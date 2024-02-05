@@ -46,39 +46,39 @@ from typing import (
 
 
 # test acces_nested_map
-def access_nested_map(nested_map: Mapping, path: Sequence) -> Any:
-    """Access nested map with key path.
-    Parameters
-    ----------
-    nested_map: Mapping
-        A nested map
-    path: Sequence
-        a sequence of key representing a path to the value
-    Example
-    -------
-    >>> nested_map = {"a": {"b": {"c": 1}}}
-    >>> access_nested_map(nested_map, ["a", "b", "c"])
-    1
-    """
-    for key in path:
-        if not isinstance(nested_map, Mapping):
-            raise KeyError(key)
-        nested_map = nested_map[key]
+# def access_nested_map(nested_map: Mapping, path: Sequence) -> Any:
+#     """Access nested map with key path.
+#     Parameters
+#     ----------
+#     nested_map: Mapping
+#         A nested map
+#     path: Sequence
+#         a sequence of key representing a path to the value
+#     Example
+#     -------
+#     >>> nested_map = {"a": {"b": {"c": 1}}}
+#     >>> access_nested_map(nested_map, ["a", "b", "c"])
+#     1
+#     """
+#     for key in path:
+#         if not isinstance(nested_map, Mapping):
+#             raise KeyError(key)
+#         nested_map = nested_map[key]
 
-    return nested_map
+#     return nested_map
 
 
-res = access_nested_map(nested_map={"a": 1}, path=("a",))
-print(res)
+# res = access_nested_map(nested_map={"a": 1}, path=("a",))
+# print(res)
 
-print('________________________________________________________________')
-res = access_nested_map(nested_map={"a": {"b": 2}}, path=("a",))
-print(res)
+# print('________________________________________________________________')
+# res = access_nested_map(nested_map={"a": {"b": 2}}, path=("a",))
+# print(res)
 
-print('________________________________________________________________')
-res = access_nested_map(nested_map={"a": {"b": 2}}, path=("a", "b")
-)
-print(res)
+# print('________________________________________________________________')
+# res = access_nested_map(nested_map={"a": {"b": 2}}, path=("a", "b")
+# )
+# print(res)
 
 
 #import unittest
@@ -100,3 +100,14 @@ print(res)
 
 # if __name__ == '__main__':
 #     unittest.main()
+
+
+#  test get_json
+
+def get_json(url: str) -> Dict:
+    """Get JSON from remote URL.
+    """
+    response = requests.get(url)
+    return response.json()
+getjson = get_json('https://jsonplaceholder.typicode.com/todos/2')
+print(getjson)
