@@ -104,10 +104,59 @@ from typing import (
 
 #  test get_json
 
-def get_json(url: str) -> Dict:
-    """Get JSON from remote URL.
+# def get_json(url: str) -> Dict:
+#     """Get JSON from remote URL.
+#     """
+#     response = requests.get(url)
+#     return response.json()
+# getjson = get_json('https://jsonplaceholder.typicode.com/todos/2')
+# print(getjson)
+
+# print('________________________________________________________________')
+# experiment memoization
+def memoize(fn: Callable) -> Callable:
+    """Decorator to memoize a method.
+    Example
+    -------
+    class MyClass:
+        @memoize
+        def a_method(self):
+            print("a_method called")
+            return 42
+    >>> my_object = MyClass()
+    >>> my_object.a_method
+    a_method called
+    42
+    >>> my_object.a_method
+    42
     """
-    response = requests.get(url)
-    return response.json()
-getjson = get_json('https://jsonplaceholder.typicode.com/todos/2')
-print(getjson)
+    attr_name = "_{}".format(fn.__name__)
+    print(attr_name)
+    @wraps(fn)
+    def memoized(self) -> Callable[..., Any]:
+        """"memoized wraps"""
+        if not hasattr(self, attr_name):
+            print(f'{self.__class__.__name__} has not attribute attr_name: ', attr_name)
+            setattr(self, attr_name, fn(self))
+        else:
+            print(f'{self.__class__.__name__} has attribute attr_name: ', attr_name)
+            
+        return getattr(self, attr_name)
+    #The property function is used to create a property object, which allows getting, setting, and deleting the value of a property.
+    return property(memoized)  # type: ignore
+
+
+#exapmle
+class MyClass:
+    @memoize
+    def a_method(self):
+        print("a_method called")
+        return 42
+my_object = MyClass()
+print('--------------------------------1')
+
+print(my_object.a_method)
+print('--------------------------------2')
+
+print(my_object.a_method)
+print('--------------------------------')

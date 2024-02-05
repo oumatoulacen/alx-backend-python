@@ -54,5 +54,33 @@ class TestGetJson(unittest.TestCase):
         self.assertEqual(result, responce_dict)
 
 
+class TestMemoize(unittest.TestCase):
+    '''Test the memoize decorator.'''
+    def test_memoize(self):
+        '''Test that the memoize decorator works as expected.'''
+        class TestClass:
+            '''Test class'''
+            def a_method(self):
+                '''Test method'''
+                return 42
+
+            @memoize
+            def a_property(self):
+                '''Test property'''
+                return self.a_method()
+
+        # Mock a_method using patch
+        with patch.object(TestClass, 'a_method') as mock_a_method:
+            # Create an instance of TestClass
+            test_instance = TestClass()
+
+            # Call a_property twice
+            result1 = test_instance.a_property()
+            result2 = test_instance.a_property()
+
+            # Check if a_method was called once
+            mock_a_method.assert_called_once()
+
+
 if __name__ == "__main__":
     unittest.main()
