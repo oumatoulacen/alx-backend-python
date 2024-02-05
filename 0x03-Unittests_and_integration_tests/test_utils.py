@@ -37,7 +37,7 @@ class TestGetJson(unittest.TestCase):
         api_mock = Mock()
         api_mock.get_json(test_url).return_value = test_payload
         # print(api_mock.get_json(test_url).return_value)
-        self.assertTrue(api_mock.get_json(test_url), test_payload)
+        self.assertEqual(api_mock.get_json(test_url).return_value, test_payload)
 
 
 if __name__ == "__main__":
