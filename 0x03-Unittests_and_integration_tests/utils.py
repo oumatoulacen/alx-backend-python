@@ -66,10 +66,10 @@ def memoize(fn: Callable) -> Callable:
     attr_name = "_{}".format(fn.__name__)
 
     @wraps(fn)
-    def memoized(self):
+    def memoized(self) -> Callable[..., Any]:
         """"memoized wraps"""
         if not hasattr(self, attr_name):
             setattr(self, attr_name, fn(self))
         return getattr(self, attr_name)
 
-    return property(memoized)
+    return property(memoized)  # type: ignore
