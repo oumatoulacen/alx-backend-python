@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 ''' This module contains the unit tests for the utils module. '''
 import unittest
+from unittest.mock import patch, Mock
 from parameterized import parameterized, param
 from utils import *
-from unittest.mock import Mock
 
 
 class TestAccessNestedMap(unittest.TestCase):
@@ -26,18 +26,32 @@ class TestAccessNestedMap(unittest.TestCase):
             access_nested_map(nested_map, path)
 
 
+# patch here is simulating the behavior of the requests.get function in the
+# get_json function and represents the response object that the requests.get
+# function returns as mock_requests_get
 class TestGetJson(unittest.TestCase):
-    '''Test Case to est get_json function.'''
+
     @parameterized.expand([
         ("http://example.com", {"payload": True}),
         ("http://holberton.io", {"payload": False})
     ])
-    def test_get_json(self, test_url, test_payload):
-        '''Test get_json function'''
-        api_mock = Mock()
-        api_mock.get_json(test_url).return_value = test_payload
-        # print(api_mock.get_json(test_url).return_value)
-        self.assertEqual(api_mock.get_json(test_url).return_value, test_payload)
+    @patch('requests.get')
+    def test_get_json(self, test_url, test_payload, mock_requests_get):
+        '''Set up the mock response'''
+        mock_response = Mock()
+        responce_dict = test_payload
+        mock_response.json.return_value = responce_dict
+        mock_requests_get.return_value = mock_response
+
+        # Call the function under test
+        result = get_json(test_url)
+
+        # Assertions
+        # Check if requests.get was called with the correct URL
+        mock_requests_get.assert_called_once_with(test_url)
+
+        # Check if the result matches the expected payload
+        self.assertEqual(result, responce_dict)
 
 
 if __name__ == "__main__":
