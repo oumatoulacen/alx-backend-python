@@ -2,7 +2,7 @@
 ''' This module contains the unit tests for the utils module. '''
 import unittest
 from unittest.mock import patch, Mock
-from parameterized import parameterized, param
+from parameterized import parameterized
 from utils import *
 
 
@@ -39,8 +39,7 @@ class TestGetJson(unittest.TestCase):
     def test_get_json(self, test_url, test_payload, mock_requests_get):
         '''Set up the mock response'''
         mock_response = Mock()
-        responce_dict = test_payload
-        mock_response.json.return_value = responce_dict
+        mock_response.json.return_value = test_payload
         mock_requests_get.return_value = mock_response
 
         # Call the function under test
@@ -51,7 +50,7 @@ class TestGetJson(unittest.TestCase):
         mock_requests_get.assert_called_once_with(test_url)
 
         # Check if the result matches the expected payload
-        self.assertEqual(result, responce_dict)
+        self.assertEqual(result, test_payload)
 
 
 class TestMemoize(unittest.TestCase):
@@ -71,6 +70,9 @@ class TestMemoize(unittest.TestCase):
 
         # Mock a_method using patch
         with patch.object(TestClass, 'a_method') as mock_a_method:
+            mock_response = Mock()
+            mock_response.return_value = 42
+            mock_a_method.return_value = mock_response
             # Create an instance of TestClass
             test_instance = TestClass()
 
@@ -80,6 +82,8 @@ class TestMemoize(unittest.TestCase):
 
             # Check if a_method was called once
             mock_a_method.assert_called_once()
+            self.assertEqual(result1, 42)
+            self.assertEqual(result2, 42)
 
 
 if __name__ == "__main__":
