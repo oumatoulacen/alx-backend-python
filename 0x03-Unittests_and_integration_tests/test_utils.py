@@ -59,12 +59,12 @@ class TestMemoize(unittest.TestCase):
         '''Test that the memoize decorator works as expected.'''
         class TestClass:
             '''Test class'''
-            def a_method(self):
+            def a_method(self) -> int:
                 '''Test method'''
                 return 42
 
             @memoize
-            def a_property(self):
+            def a_property(self) -> callable:
                 '''Test property'''
                 return self.a_method()
 
