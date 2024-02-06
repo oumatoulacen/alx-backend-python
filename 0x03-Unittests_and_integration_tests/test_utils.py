@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 ''' This module contains the unit tests for the utils module. '''
 import unittest
-from unittest import mock
 from unittest.mock import Mock, patch
 from parameterized import parameterized
 from utils import *
