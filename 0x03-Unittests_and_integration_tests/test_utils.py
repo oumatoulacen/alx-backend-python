@@ -70,6 +70,7 @@ class TestMemoize(unittest.TestCase):
 
         # Mock a_method using patch
         with patch.object(TestClass, 'a_method') as mock_a_method:
+            '''Test class'''
             mock_response = Mock()
             mock_response.return_value = 42
             mock_a_method.return_value = mock_response
