@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 ''' This module contains the unit tests for the utils module. '''
 import unittest
-from unittest.mock import patch, Mock
+from unittest import mock
+from unittest.mock import patch
 from parameterized import parameterized
 from utils import *
 
@@ -58,14 +59,12 @@ class TestMemoize(unittest.TestCase):
     def test_memoize(self):
         '''Test that the memoize decorator works as expected.'''
         class TestClass:
-            '''Test class'''
-            def a_method(self) -> int:
-                '''Test method'''
+
+            def a_method(self):
                 return 42
 
             @memoize
-            def a_property(self) -> callable:
-                '''Test property'''
+            def a_property(self):
                 return self.a_method()
 
         # Mock a_method using patch
