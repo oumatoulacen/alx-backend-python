@@ -30,3 +30,4 @@ def batch_processing(batch_size: int):
             if row[3] > 25:
                 print(row)
     print()
+    return None
