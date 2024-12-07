@@ -31,7 +31,7 @@ def compute_ages():
     for age in ages:
         total += age
         count += 1
-    return total / count
+    return total / count if count > 0 else 0
 
 if __name__ == '__main__':
     print('Average age of users:', compute_ages())
