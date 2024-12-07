@@ -9,8 +9,8 @@ def with_db_connection(func):
     """ decorator to open and close database connections """
     @functools.wraps(func)
     def wrapper(*args, **kwargs):
-        conn = kwargs.get('conn')
-        result = func(*args, **kwargs)
+        conn = sqlite3.connect('users.db')
+        result = func(conn=conn, *args, **kwargs)
         conn.close()
         return result
     return wrapper
@@ -38,6 +38,5 @@ def fetch_users_with_retry(conn):
     return cursor.fetchall()
 
 #### attempt to fetch users with automatic retry on failure
-conn = sqlite3.connect('users.db')
-users = fetch_users_with_retry(conn=conn)
+users = fetch_users_with_retry()
 print(users)
