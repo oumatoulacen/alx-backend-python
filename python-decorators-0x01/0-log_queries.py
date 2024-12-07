@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """ Log queries """
-import time
+from datetime import datetime
 import sqlite3
 import functools
 
@@ -8,10 +8,8 @@ import functools
 def log_queries(func):
     @functools.wraps(func)
     def wrapper(*args, **kwargs):
-        start_time = time.time()
         result = func(*args, **kwargs)
-        end_time = time.time()
-        print(f'{func.__name__} - {args[0]!r} - {end_time - start_time}')
+        print(f'{datetime.now()} - {func.__name__} - {args[0]!r}') # log the query
         return result
     return wrapper
 
