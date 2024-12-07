@@ -9,6 +9,7 @@ def with_db_connection(func):
     """ decorator to open and close database connections """
     @functools.wraps(func)
     def wrapper(*args, **kwargs):
+        conn = kwargs.get('conn')
         result = func(*args, **kwargs)
         conn.close()
         return result
