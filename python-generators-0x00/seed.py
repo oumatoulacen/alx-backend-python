@@ -2,6 +2,7 @@
 '''create a generator that streams rows from an SQL database one by one.'''
 
 import mysql.connector
+from uuid import uuid4 as uuid
 
 config = {
         'host': 'localhost',
@@ -45,13 +46,16 @@ def create_table(connection):
 
 def insert_data(connection, filename):
     '''insert data into the table'''
+    if not connection.is_connected():
+        '''reconnect if connection is closed'''
+        connection.reconnect()
     cursor = connection.cursor()
-    stmt = '''INSERT INTO user_data (id, name, email, age) VALUES (%s, %s, %s, %s);'''
+    stmt = '''INSERT INTO user_data (id, name, email, age) VALUES (uuid(), %s, %s, %s);'''
     with open(filename, 'r') as f:
         next(f)
         for line in f:
             row = line.strip().split(',')
-            cursor.execute(stmt, (row[0], row[1], row[2], row[3]))
+            cursor.execute(stmt, (row[0], row[1], int(row[2][1:-1])))
     connection.commit()
     cursor.close()
 
