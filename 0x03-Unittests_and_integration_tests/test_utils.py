@@ -19,3 +19,9 @@ class TestAccessNestedMap(TestCase):
         """Test access_nested_map with different inputs.
         """
         self.assertEqual(access_nested_map(nested_map, path), expected)
+
+    def test_access_nested_map_exception(self):
+        """Test access_nested_map with invalid path.
+        """
+        with self.assertRaises(KeyError):
+            access_nested_map({"a": 1}, ("a", "b"))
