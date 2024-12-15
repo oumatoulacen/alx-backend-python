@@ -26,8 +26,11 @@ class TestGithubOrgClient(unittest.TestCase):
         mock.assert_called_once_with(f'https://api.github.com/orgs/{input}')
 
     def test_public_repos_url(self):
-        """ test that the _public_repos_url method returns the correct value."""
-        with patch('client.GithubOrgClient.org', new_callable=PropertyMock) as mock:
+        """ test that the _public_repos_url method returns the correct value"""
+        with patch(
+            'client.GithubOrgClient.org',
+            new_callable=PropertyMock
+        ) as mock:
             mock.return_value = {'repos_url': 'test_value'}
             test_class = GithubOrgClient('test')
             self.assertEqual(test_class._public_repos_url, 'test_value')
@@ -39,7 +42,10 @@ class TestGithubOrgClient(unittest.TestCase):
             {'name': 'repo1', 'license': {'key': 'my_license'}},
             {'name': 'repo2', 'license': {'key': 'other_license'}}
         ]
-        with patch('client.GithubOrgClient._public_repos_url', new_callable=PropertyMock) as mp:
+        with patch(
+            'client.GithubOrgClient._public_repos_url',
+            new_callable=PropertyMock
+        ) as mp:
             mp.return_value = 'https://api.github.com/orgs/test/repos'
             test_class = GithubOrgClient('test')
             self.assertEqual(test_class.public_repos('my_license'), ['repo1'])
