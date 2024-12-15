@@ -8,6 +8,7 @@ from parameterized import parameterized
 from utils import access_nested_map, get_json, memoize
 import requests
 
+
 class TestAccessNestedMap(TestCase):
     """Tests for access_nested_map function.
     """
@@ -65,7 +66,7 @@ class TestMemoize(TestCase):
             def a_property(self):
                 '''a property'''
                 return self.a_method()
-        
+
         with patch.object(MyClass, 'a_method') as mock_method:
             mock_method.return_value = 42
             my_object = MyClass()
