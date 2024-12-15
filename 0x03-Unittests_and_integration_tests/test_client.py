@@ -50,12 +50,10 @@ class TestGithubOrgClient(unittest.TestCase):
             test_class = GithubOrgClient('test')
             self.assertEqual(test_class.public_repos('my_license'), ['repo1'])
 
-    def test_has_license(self):
+    @parameterized.expand([
+        ({'license': {'key': 'my_license'}}, 'my_license', True),
+        ({'license': {'key': 'other_license'}}, 'my_license', False)
+    ])
+    def test_has_license(self, repo, license_key, expected):
         """ test that the has_license method returns the correct value."""
-        r = {"license": {"key": "my_license"}}
-        license_key = "my_license"
-        r1 = {"license": {"key": "other_license"}}
-        license_key1 = "my_license"
-        test_class = GithubOrgClient('test')
-        self.assertTrue(test_class.has_license(r, license_key))
-        self.assertFalse(test_class.has_license(r1, license_key1))
+        self.assertEqual(GithubOrgClient.has_license(repo, license_key), expected)
