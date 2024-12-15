@@ -57,11 +57,14 @@ class TestGithubOrgClient(unittest.TestCase):
     ])
     def test_has_license(self, repo, license_key, expected):
         """ test that the has_license method returns the correct value."""
-        self.assertEqual(GithubOrgClient.has_license(repo, license_key), expected)
+        self.assertEqual(GithubOrgClient.has_license(
+            repo, license_key), expected
+            )
+
 
 @parameterized_class(
-    ('org_payload', 'repos_payload', 'expected_repos', 'apache2_repos')
-    , TEST_PAYLOAD
+    ('org_payload', 'repos_payload', 'expected_repos', 'apache2_repos'),
+    TEST_PAYLOAD
 )
 class TestIntegrationGithubOrgClient(unittest.TestCase):
     '''Integration test for GithubOrgClient
@@ -82,7 +85,6 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
             return Mock(json=lambda: {})
 
         cls.mock_get.side_effect = get_side_effect
-
 
     @classmethod
     def tearDownClass(cls):
