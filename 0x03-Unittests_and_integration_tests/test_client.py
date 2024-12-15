@@ -49,3 +49,13 @@ class TestGithubOrgClient(unittest.TestCase):
             mp.return_value = 'https://api.github.com/orgs/test/repos'
             test_class = GithubOrgClient('test')
             self.assertEqual(test_class.public_repos('my_license'), ['repo1'])
+
+    def test_has_license(self):
+        """ test that the has_license method returns the correct value."""
+        r = {"license": {"key": "my_license"}}
+        license_key = "my_license"
+        r1 = {"license": {"key": "other_license"}}
+        license_key1 = "my_license"
+        test_class = GithubOrgClient('test')
+        self.assertTrue(test_class.has_license(r, license_key))
+        self.assertFalse(test_class.has_license(r1, license_key1))
