@@ -1,55 +1,41 @@
-from django.db import models
 import uuid
+from django.contrib.auth.models import AbstractUser
+from django.db import models
 
-# Create your models here.
-# Database Specification
-# Entities and Attributes
-
-# User:
-# user_id (Primary Key, UUID, Indexed)
-# first_name (VARCHAR, NOT NULL)
-# last_name (VARCHAR, NOT NULL)
-# email (VARCHAR, UNIQUE, NOT NULL)
-# password_hash (VARCHAR, NOT NULL)
-# phone_number (VARCHAR, NULL)
-# role (ENUM: 'guest', 'host', 'admin', NOT NULL)
-# created_at (TIMESTAMP, DEFAULT CURRENT_TIMESTAMP)
-
-# Message:
-# message_id (Primary Key, UUID, Indexed)
-# sender_id (Foreign Key, references User(user_id))
-# message_body (TEXT, NOT NULL)
-# sent_at (TIMESTAMP, DEFAULT CURRENT_TIMESTAMP)
-
-# Conversation:
-# conversation_id (Primary Key, UUID, Indexed)
-# participants_id (Foreign Key, references User(user_id)
-# created_at (TIMESTAMP, DEFAULT CURRENT_TIMESTAMP)
-
-# Using the tables definition described above,
-
-# Create the user Model an extension of the Abstract user for values not defined in the built-in Django User model
-# Create the conversation model that tracks which users are involved in a conversation
-# Create the message model containing the sender, conversation as defined in the shared schema attached to this project
-
-class User(models.Model):
+class User(AbstractUser):
     user_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    first_name = models.CharField(max_length=100)
-    last_name = models.CharField(max_length=100)
-    email = models.EmailField(unique=True)
-    password_hash = models.CharField(max_length=100)
-    phone_number = models.CharField(max_length=100)
-    role = models.CharField(max_length=100)
+    first_name = models.CharField(max_length=255, null=False)
+    last_name = models.CharField(max_length=255, null=False)
+    email = models.EmailField(unique=True, null=False)
+    password_hash = models.CharField(max_length=255, null=False)
+    phone_number = models.CharField(max_length=15, null=True, blank=True)
+
+    ROLE_CHOICES = [
+        ('guest', 'Guest'),
+        ('host', 'Host'),
+        ('admin', 'Admin'),
+    ]
+    role = models.CharField(max_length=10, choices=ROLE_CHOICES, null=False)
     created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.first_name} {self.last_name} ({self.email})"
 
 class Conversation(models.Model):
     conversation_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    participants_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    participants = models.ManyToManyField(User, related_name='conversations')
     created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        participants_names = ', '.join([str(user) for user in self.participants.all()])
+        return f"Conversation {self.conversation_id} between {participants_names}"
 
 class Message(models.Model):
     message_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    sender_id = models.ForeignKey(User, on_delete=models.CASCADE)
-    message_body = models.TextField()
+    sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name='sent_messages')
+    conversation = models.ForeignKey(Conversation, on_delete=models.CASCADE, related_name='messages')
+    message_body = models.TextField(null=False)
     sent_at = models.DateTimeField(auto_now_add=True)
-    conversation_id = models.ForeignKey(Conversation, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"Message {self.message_id} from {self.sender} in conversation {self.conversation}"
