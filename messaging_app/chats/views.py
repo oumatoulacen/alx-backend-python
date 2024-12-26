@@ -15,6 +15,14 @@ class ConversationViewSet(viewsets.ModelViewSet):
     @action(detail=False, methods=['post'])
     def create_conversation(self, request):
         participant_ids = request.data.get('participants')
+
+        filters = {
+            'participants': participant_ids,
+        }
+
+        if not filters['participants']:
+            return Response({"error": "participants is required."}, status=400)
+
         if not participant_ids or len(participant_ids) < 2:
             return Response({"error": "At least two participants are required."}, status=400)
 
@@ -37,6 +45,14 @@ class MessageViewSet(viewsets.ModelViewSet):
         sender_id = request.data.get('sender_id')
         message_body = request.data.get('message_body')
 
+        filters = {
+            'conversation_id': conversation_id,
+            'sender_id': sender_id,
+            'message_body': message_body,
+        }
+        if not all(filters.values()):
+            return Response({"error": "conversation_id, sender_id, and message_body are required."}, status=400)
+    
         try:
             conversation = Conversation.objects.get(conversation_id=conversation_id)
         except Conversation.DoesNotExist:
