@@ -8,7 +8,7 @@ router.register('conversations', ConversationViewSet, basename='conversation')
 
 # Nested router for messages under conversations
 nested_router = NestedDefaultRouter(router, 'conversations', lookup='conversation')
-nested_router.register('messages', MessageViewSet, basename='conversation-messages')
+nested_router.register('messages', MessageViewSet, basename='messages')
 
 urlpatterns = [
     path('', include(router.urls)),
