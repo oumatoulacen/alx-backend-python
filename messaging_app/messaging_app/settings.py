@@ -27,6 +27,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+# use the custom user model in the chats app as the default user model
+AUTH_USER_MODEL = 'chats.User'
 
 # Application definition
 INSTALLED_APPS = [
@@ -37,7 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    
+
     # Add the chats app to the list of installed apps:
     'chats',
 ]
