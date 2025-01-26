@@ -1,6 +1,9 @@
 # Use a base Python image
 FROM python:3.10
 
+# create and set the working directory
+RUN mkdir -p /app
+
 # Set the working directory in the container
 WORKDIR /app
 
