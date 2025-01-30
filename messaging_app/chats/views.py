@@ -12,9 +12,16 @@ class ConversationViewSet(viewsets.ModelViewSet):
 
     def create(self, request, *args, **kwargs):
         participants = request.data.get('participants', [])
+        # using filters
+        filters = participants
         participants = User.objects.filter(user_id__in=[participant for participant in participants])
-        if len(participants) < 2:
+
+        if len(set(filters)) != len(set(participants)):
+            return Response({'participants': 'Conversations cannot have duplicate participants.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        if len(set(participants)) < 2:
             return Response({'participants': 'Conversations must have at least 2 participants.'}, status=status.HTTP_400_BAD_REQUEST)
+        
         conversation = Conversation.objects.create()
         conversation.participants.set(participants)
         conversation.save()
