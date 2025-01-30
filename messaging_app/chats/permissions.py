@@ -1,13 +1,22 @@
-from rest_framework.permissions import BasePermission, SAFE_METHODS
+from rest_framework.permissions import BasePermission
 
 class IsParticipantOfConversation(BasePermission):
+    """
+    Custom permission to allow only participants of a conversation to access it.
+    """
+
+    def has_permission(self, request, view):
+        # Ensure the user is authenticated before checking object-level permission
+        return request.user and request.user.is_authenticated
+
     def has_object_permission(self, request, view, obj):
-        # if request.method in SAFE_METHODS:
-        #     return True # Uncomment this 2 lines if you want to allow anyone to read conversations
-        return request.user and request.user.is_authenticated and request.user in obj.participants.all()
+        # Check if the user is a participant of the conversation
+        return request.user in obj.participants.all()
+
 
 class IsSenderOfMessage(BasePermission):
     def has_object_permission(self, request, view, obj):
-        # if request.method in SAFE_METHODS:
-        #     return True # Uncomment this 2 lines if you want to allow anyone to read messages
         return request.user and request.user.is_authenticated and request.user == obj.sender
+
+    def has_permission(self, request, view):
+        return request.user and request.user.is_authenticated
