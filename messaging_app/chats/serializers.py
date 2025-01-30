@@ -8,7 +8,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['user_id', 'first_name', 'last_name', 'email', 'phone_number', 'role', 'role_description', 'created_at', 'full_name']
+        fields = ['user_id', 'first_name', 'last_name', 'full_name', 'email', 'phone_number', 'role', 'role_description', 'created_at']
 
     def get_full_name(self, obj):
         return f"{obj.first_name} {obj.last_name}"
