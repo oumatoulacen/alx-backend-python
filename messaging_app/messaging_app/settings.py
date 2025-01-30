@@ -51,6 +51,8 @@ INSTALLED_APPS = [
 
     # Add the chats app to the list of installed apps:
     'chats',
+    'rest_framework_nested',
+    'rest_framework_simplejwt',
 ]
 
 MIDDLEWARE = [
@@ -71,7 +73,9 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.SessionAuthentication',
         # Add other authentication methods if needed:
-        # 'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
     ],
 }
 

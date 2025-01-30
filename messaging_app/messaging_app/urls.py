@@ -16,10 +16,20 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from rest_framework_simplejwt.views import (
+    TokenObtainSlidingView,
+    TokenRefreshSlidingView,
+    TokenVerifyView,
+)
 
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('api-auth/', include('rest_framework.urls')),
-    path('api/', include('chats.urls')),
+    path('admin/', admin.site.urls), # Django admin
+    path('api/', include('chats.urls')), # API endpoints
+    path('api-auth/', include('rest_framework.urls')), # Login to the browsable API
+
+    # Add the rest_framework_simplejwt views for token authentication
+    path('api/token/', TokenObtainSlidingView.as_view(), name='token_obtain_pair'),
+    path('api/token/refresh/', TokenRefreshSlidingView.as_view(), name='token_refresh'),
+    path('api/token/verify/', TokenVerifyView.as_view(), name='token_verify'),
 ]
