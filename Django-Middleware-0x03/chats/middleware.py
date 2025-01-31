@@ -46,7 +46,7 @@ class OffensiveLanguageMiddleware:
         ''' Code to be executed for each request before or after
             the view (and later middleware) are called. '''
         path = request.path
-        if "messages" and "conversation" in path and request.method == "POST":
+        if request.method == "POST" and "messages" and "conversation" in path:
             # get the IP address of the client
             ip = request.META.get('REMOTE_ADDR')
             if ip in self.ips:
@@ -67,3 +67,19 @@ class OffensiveLanguageMiddleware:
                         del self.ips[ip]
 
         response = self.get_response(request)
+
+        return response
+
+class RolepermissionMiddleware:
+    def __init__(self, get_response):
+        ''' One-time configuration and initialization. '''
+        self.get_response = get_response
+    
+    def __call__(self, request):
+        ''' Code to be executed for each request before or after
+            the view (and later middleware) are called. '''
+        if not request.user.is_authenticated and not request.user.is_staff:
+            return HttpResponse('You do not have permission to access this page', status=403)
+        response = self.get_response(request)
+
+        return response
