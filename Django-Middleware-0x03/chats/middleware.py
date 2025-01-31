@@ -35,3 +35,35 @@ class RestrictAccessByTimeMiddleware:
         response = self.get_response(request)
 
         return response
+
+class OffensiveLanguageMiddleware:
+    def __init__(self, get_response):
+        ''' One-time configuration and initialization. '''
+        self.get_response = get_response
+        ips = {} # Store the number of requests per IP address
+
+    def __call__(self, request):
+        ''' Code to be executed for each request before or after
+            the view (and later middleware) are called. '''
+        path = request.path
+        if "messages" and "conversation" in path and request.method == "POST":
+            # get the IP address of the client
+            ip = request.META.get('REMOTE_ADDR')
+            if ip in self.ips:
+                self.ips[ip] = [datetime.now(), self.ips[ip][1] + 1]
+            else:
+                self.ips[ip] = [datetime.now(), 1]
+            if self.ips[ip][1] > 5:
+                return HttpResponse('You have reached the maximum number of requests', status=429)
+            # reset the counter after 1 minute
+            if (datetime.now() - self.ips[ip][0]).seconds > 60:
+                self.ips[ip] = [datetime.now(), 0]
+            
+            # delete the IP address from the dictionary if it has not made any requests in the last 5 minutes
+            if len(self.ips) > 10:
+                for ip in self.ips:
+                    if (datetime.now() - self.ips[ip][0]).seconds > 300:
+                        print(f"Deleting {ip}")
+                        del self.ips[ip]
+
+        response = self.get_response(request)
