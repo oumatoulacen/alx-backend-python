@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
+from .models import Message, Notification, MessageHistory
 
 # Create your views here.
 def delete_user(request):
@@ -13,3 +14,9 @@ def delete_user(request):
 def home(request):
     '''Home page'''
     return HttpResponse('Home page')
+
+def thread(request):
+    '''Thread page'''
+    # Get all replies to the parent message and related_messages
+    message = Message.objects.prefetch_related('replies').first() # prefetch_related is used to reduce the number of queries
+    return render(request, 'thread.html', {'message': message})
