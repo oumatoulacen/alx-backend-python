@@ -50,6 +50,16 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+# Cache settings
+CACHES = {
+    'default': {
+        'BACKEND':
+        'django.core.cache.backends.locmem.LocMemCache',
+        'LOCATION': 'unique-snowflake',
+    }
+}
+
+
 ROOT_URLCONF = 'signals_orm.urls'
 
 TEMPLATES = [
