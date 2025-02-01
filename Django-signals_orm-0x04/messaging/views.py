@@ -1,6 +1,9 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
-from .models import Message, Notification, MessageHistory
+from .models import Message
+from django.contrib.auth.models import User
+from django.db.models import Q
 
 # Create your views here.
 def delete_user(request):
@@ -11,12 +14,21 @@ def delete_user(request):
         return redirect('home')
     return render(request, 'delete_user.html')
 
-def home(request):
-    '''Home page'''
-    return HttpResponse('Home page')
 
-def thread(request):
-    '''Thread page'''
-    # Get all replies to the parent message and related_messages
-    message = Message.objects.prefetch_related('replies').first() # prefetch_related is used to reduce the number of queries
-    return render(request, 'thread.html', {'message': message})
+@login_required
+def user_conversations_view(request):
+    """
+    Fetch all conversations involving the logged-in user.
+    """
+    user = request.user
+    messages = (
+        Message.objects.filter(
+        Q(sender=user) | Q(receiver=user),  # Either sender or receiver is the user
+        parent_message__isnull=True)  # Only messages received by the user
+        .select_related("sender", "parent_message")  # Optimize ForeignKey lookups
+        .prefetch_related("replies")  # Prefetch all replies for each message
+        .order_by("-timestamp")  # Show most recent messages first
+    )
+    print(messages)
+    
+    return render(request, "conversations.html", {"messages": messages})
