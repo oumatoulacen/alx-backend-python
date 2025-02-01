@@ -7,4 +7,4 @@ class UnreadMessagesManager(models.Manager):
         Returns unread messages for a specific user.
         Optimized using `.only()` to fetch only necessary fields.
         """
-        return self.filter(receiver=user, unread=True).only("id", "sender", "content", "timestamp")
+        return self.filter(receiver=user, unread=True)
