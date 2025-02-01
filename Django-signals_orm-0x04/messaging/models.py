@@ -29,4 +29,4 @@ class MessageHistory(models.Model):
     content = models.TextField()
     timestamp = models.DateTimeField(auto_now_add=True)
     edited_at = models.DateTimeField(auto_now=True)
-    edited_by = models.ForeignKey(User, related_name='edited_history', on_delete=models.SET_NULL, null=True)
+    edited_by = models.ForeignKey(User, related_name='edited_history', on_delete=models.CASCADE)
