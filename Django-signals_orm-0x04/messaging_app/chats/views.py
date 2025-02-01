@@ -7,6 +7,11 @@ from .serializers import ConversationSerializer, MessageSerializer
 from .permissions import IsParticipantOfConversation, IsSenderOfMessage
 from django.utils import timezone
 
+# for caching
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
+from django.views.decorators.vary import vary_on_cookie, vary_on_headers
+
 import django_filters
 from rest_framework.pagination import PageNumberPagination
 from django_filters.rest_framework import DjangoFilterBackend
@@ -66,6 +71,13 @@ class MessageViewSet(viewsets.ModelViewSet):
     pagination_class = MessagePagination
     filter_backends = (DjangoFilterBackend,)  # Using django-filters
     filterset_class = MessageFilter  # Applying the filter class
+
+    # Cache the list of messages for 5 minutes
+    @method_decorator(cache_page(60))
+    @method_decorator(vary_on_cookie)
+    @method_decorator(vary_on_headers('Authorization'))
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
 
     def get_queryset(self):
         """

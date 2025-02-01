@@ -94,6 +94,16 @@ REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
 }
 
+# Cache settings
+CACHES = {
+    'default': {
+        'BACKEND':
+        'django.core.cache.backends.locmem.LocMemCache',
+        'LOCATION': 'unique-snowflake',
+    }
+}
+
+
 ROOT_URLCONF = 'messaging_app.urls'
 
 TEMPLATES = [
