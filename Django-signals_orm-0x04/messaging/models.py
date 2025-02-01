@@ -7,6 +7,7 @@ class Message(models.Model):
     content = models.TextField()
     timestamp = models.DateTimeField(auto_now_add=True)
     is_read = models.BooleanField(default=False)
+    edited = models.BooleanField(default=False)
 
     def mark_as_read(self):
         self.is_read = True
@@ -21,3 +22,9 @@ class Notification(models.Model):
     def mark_as_read(self):
         self.is_read = True
         self.save()
+
+class MessageHistory(models.Model):
+    sender = models.ForeignKey(User, related_name='sent_history', on_delete=models.CASCADE)
+    receiver = models.ForeignKey(User, related_name='received_history', on_delete=models.CASCADE)
+    content = models.TextField()
+    timestamp = models.DateTimeField(auto_now_add=True)
