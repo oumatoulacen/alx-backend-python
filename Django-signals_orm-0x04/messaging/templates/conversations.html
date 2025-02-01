@@ -29,7 +29,7 @@
             <p><strong>Timestamp:</strong> {{ message.timestamp }}</p>
             </div>
             <div style="display: flex; message">
-            <p><strong>Read:</strong> {{ message.is_read }}</p>
+            <p><strong>Unread:</strong> {{ message.unread }}</p>
             <p><strong>Edited:</strong> {{ message.edited }}</p>
             </div>
           {% if message.replies.all %}

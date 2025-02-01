@@ -27,9 +27,7 @@ def user_conversations_view(request):
         .select_related("sender", "parent_message")  # Optimize ForeignKey lookups
         .prefetch_related("replies")  # Prefetch all replies for each message
         .order_by("-timestamp")  # Show most recent messages first
-    )
-    print(messages)
-    
+    )    
     return render(request, "conversations.html", {"messages": messages})
 
 
