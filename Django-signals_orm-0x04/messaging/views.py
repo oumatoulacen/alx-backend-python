@@ -31,3 +31,13 @@ def user_conversations_view(request):
     print(messages)
     
     return render(request, "conversations.html", {"messages": messages})
+
+
+@login_required
+def unread_messages_view(request):
+    """
+    Displays unread messages for the logged-in user.
+    """
+    unread_messages = Message.objects.unread_for_user(request.user)
+    
+    return render(request, "unread_messages.html", {"messages": unread_messages})
