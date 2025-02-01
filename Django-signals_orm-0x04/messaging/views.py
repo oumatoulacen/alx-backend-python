@@ -20,10 +20,9 @@ def user_conversations_view(request):
     """
     Fetch all conversations involving the logged-in user.
     """
-    user = request.user
     messages = (
         Message.objects.filter(
-        Q(sender=user) | Q(receiver=user),  # Either sender or receiver is the user
+        Q(sender=request.user) | Q(receiver=request.user),  # Either sender or receiver is the user
         parent_message__isnull=True)  # Only messages received by the user
         .select_related("sender", "parent_message")  # Optimize ForeignKey lookups
         .prefetch_related("replies")  # Prefetch all replies for each message
