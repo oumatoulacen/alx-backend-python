@@ -36,6 +36,6 @@ def unread_messages_view(request):
     """
     Displays unread messages for the logged-in user.
     """
-    unread_messages = Message.objects.unread_for_user(request.user).only("id", "sender", "content", "timestamp")
+    unread_messages = Message.unread.unread_for_user(request.user).only("id", "sender", "content", "timestamp")
     
     return render(request, "unread_messages.html", {"messages": unread_messages})

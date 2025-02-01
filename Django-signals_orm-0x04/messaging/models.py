@@ -7,14 +7,15 @@ class Message(models.Model):
     receiver = models.ForeignKey(User, related_name='received_messages', on_delete=models.CASCADE)
     content = models.TextField()
     timestamp = models.DateTimeField(auto_now_add=True)
-    unread = models.BooleanField(default=True)
+    is_read = models.BooleanField(default=False)
     edited = models.BooleanField(default=False)
     parent_message = models.ForeignKey('self', related_name='replies', on_delete=models.CASCADE, null=True)
 
-    objects = UnreadMessagesManager()
+    unread = UnreadMessagesManager() # Custom manager
+    objects = models.Manager() # Default manager
 
     def __str__(self):
-        return f"{self.content} from {self.sender} to {self.receiver} ({'Read' if self.unread else 'Unread'})"
+        return f"{self.content} from {self.sender} to {self.receiver} ({'Read' if self.is_read else 'Unread'})"
 
 
 class Notification(models.Model):
