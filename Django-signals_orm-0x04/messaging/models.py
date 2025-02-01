@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 
 
-class MessageManager(models.Manager):
+class UnreadMessagesManager(models.Manager):
     def unread_for_user(self, user):
         """
         Returns unread messages for a specific user.
@@ -20,7 +20,7 @@ class Message(models.Model):
     edited = models.BooleanField(default=False)
     parent_message = models.ForeignKey('self', related_name='replies', on_delete=models.CASCADE, null=True)
 
-    objects = MessageManager()
+    objects = UnreadMessagesManager()
 
     def mark_as_read(self):
         self.is_read = True
